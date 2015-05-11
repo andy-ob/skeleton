@@ -1,0 +1,26 @@
+Install node instance
+npm install
+
+contact
+npm install grunt-contrib-concat --save-dev
+
+minify css
+npm install grunt-contrib-cssmin --save-dev
+
+minify js
+npm install grunt-contrib-uglify --save-dev
+
+compass
+npm install grunt-contrib-compass
+
+browser-sync
+npm install grunt-contrib-browser-sync --save-dev
+
+watch
+npm install grunt-contrib-watch
+
+Package
+grunt
+
+Serve
+grunt serve

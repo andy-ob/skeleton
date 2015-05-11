@@ -1,0 +1,77 @@
+/*
+ * Global variables used for styles throughout the framework and for various calculations
+ */
+/* Global styles */
+/* Default button styles */
+/* Alt button styles */
+/*Generic styles*/
+/*Layout */
+/* line 3, ../sass/navigation.scss */
+#leadNav {
+  background: black;
+}
+/* line 5, ../sass/navigation.scss */
+#leadNav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* line 10, ../sass/navigation.scss */
+#leadNav li {
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+/* line 14, ../sass/navigation.scss */
+#leadNav li a {
+  color: white;
+  display: block;
+  padding: 0.3125em 0.9375em;
+}
+/* line 18, ../sass/navigation.scss */
+#leadNav li a:hover {
+  background: white;
+  color: black;
+  text-decoration: none;
+}
+
+/* line 28, ../sass/navigation.scss */
+#breadcrumb {
+  font-size: 0.75em;
+}
+/* line 30, ../sass/navigation.scss */
+#breadcrumb ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* line 35, ../sass/navigation.scss */
+#breadcrumb li {
+  float: left;
+  margin: 0 0 0 20px;
+  padding: 0;
+  position: relative;
+}
+/* line 40, ../sass/navigation.scss */
+#breadcrumb li::before {
+  border-bottom: 3px solid transparent;
+  border-left: 3px solid black;
+  border-top: 3px solid transparent;
+  content: "";
+  height: 0;
+  left: -10px;
+  position: absolute;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  top: 50%;
+  width: 0;
+}
+/* line 52, ../sass/navigation.scss */
+#breadcrumb li:first-child {
+  margin-left: 0;
+}
+/* line 54, ../sass/navigation.scss */
+#breadcrumb li:first-child::before {
+  border: 0;
+}
