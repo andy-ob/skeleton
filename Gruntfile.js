@@ -4,37 +4,45 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     // 2. Configuration for plugins goes here.
-    compass: {
-        dist: {
-            options: {
-                outputStyle: 'expanded', //Nested, expanded, compact, compressed
-                //sassDir: 'Assets/sass',
-                //cssDir: 'Assets/stylesheets',
-            },
-            files: {
-              "Assets/stylesheets/styles.css": "Assets/sass/styles.scss"
-            }
-        }
-    },
     sass: {
-      dist: {
+      build: {
         options: {
-          outputStyle: "expanded"
+          outputStyle: "expanded",
+          sourceComments: true
+        },
+        files: {
+          "Assets/stylesheets/styles.css": "Assets/sass/styles.scss"
+        }
+      },
+      prod: {
+        options: {
+          outputStyle: "compressed"
         },
         files: {
           "Assets/stylesheets/styles.css": "Assets/sass/styles.scss"
         }
       }
     },
-    autoprefixer: {
+    // autoprefixer: {
+    //   options: {
+    //     browsers: ['last 3 version', 'Safari >= 5'] // more codenames at https://github.com/ai/autoprefixer#browsers
+    //   },
+    //   build: {
+    //     expand: true,
+    //     cwd: 'Assets/stylesheets/',
+    //     src: ['*.css'],
+    //     dest: 'Assets/stylesheets/',
+    //   }
+    // },
+    postcss: {
       options: {
-        browsers: ['last 3 version', 'Safari >= 5'] // more codenames at https://github.com/ai/autoprefixer#browsers
+        map: false, // inline sourcemaps
+        processors: [
+          require('autoprefixer-core')({browsers: ['last 3 version', 'Safari >= 5']}), // add vendor prefixes
+        ]
       },
-      dist: {
-        expand: true,
-        cwd: 'Assets/stylesheets/',
-        src: ['*.css'],
-        dest: 'Assets/stylesheets/',
+      build: {
+        src: 'Assets/stylesheets/*.css'
       }
     },
     concat: {
@@ -46,18 +54,17 @@ module.exports = function(grunt) {
     uglify: {
       build: {
         src: 'Assets/js/min/production.js',
-        dest: 'Assets/js/min/production.js' //Minify JS
-      }
-    },
-    cssmin: {
-      options: {
-        shorthandCompacting: false,
-        roundingPrecision: -1
+        dest: 'Assets/js/min/production.js'
       },
-      target: {
-        files: {
-          'Assets/stylesheets/min/compiled.min.css' : ['Assets/stylesheets/styles.css']
-        }
+      minEach: {
+        files: [{
+          expand: true,
+          flatten: true,
+          cwd: 'Assets/js/',
+          src: ['*.js', '!*.min.js'],
+          dest: 'Assets/js/min/',
+          ext: '.min.js'
+        }]
       }
     },
     watch: {
@@ -73,8 +80,8 @@ module.exports = function(grunt) {
       },
       css: {
         files: ['Assets/sass/*.scss'], //Watch scss and css for changes
-        //tasks: ['compass', 'newer:autoprefixer:dist', 'cssmin'], //Build CSS and minify
-        tasks: ['sass', 'newer:autoprefixer:dist', 'cssmin'], //Build CSS and minify
+        //tasks: ['compass', 'newer:autoprefixer:build', 'cssmin'], //Build CSS and minify
+        tasks: ['sass:build', 'postcss'], //Build CSS and minify
         options: {
           spawn: false,
         }
@@ -117,11 +124,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin'); // Css minify
   grunt.loadNpmTasks('grunt-contrib-watch'); // Watches files for changes, run 'grunt watch' will pick up sass changes and compile css
   grunt.loadNpmTasks('grunt-browser-sync'); //Create server
-  grunt.loadNpmTasks('grunt-autoprefixer'); // Use specified vendor prefixes for compiled CSS
-  grunt.loadNpmTasks('grunt-newer'); // Add newer: infront of a task to only account for recently edited files
-  grunt.loadNpmTasks('grunt-tinyimg'); // Image optimizer
+  grunt.loadNpmTasks('grunt-postcss');
+  //grunt.loadNpmTasks('grunt-autoprefixer'); // Use specified vendor prefixes for compiled CSS
+  //grunt.loadNpmTasks('grunt-newer'); // Add newer: infront of a task to only account for recently edited files
 
   // 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
-  grunt.registerTask('default', ['compass', 'newer:autoprefixer:dist', 'concat', 'uglify', 'cssmin']);
   grunt.registerTask('serve', ['browserSync', 'watch']);
+  grunt.registerTask('prod', ['sass:prod', 'postcss', 'concat', 'uglify:build']);
 };
