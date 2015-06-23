@@ -23,17 +23,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    // autoprefixer: {
-    //   options: {
-    //     browsers: ['last 3 version', 'Safari >= 5'] // more codenames at https://github.com/ai/autoprefixer#browsers
-    //   },
-    //   build: {
-    //     expand: true,
-    //     cwd: 'Assets/stylesheets/',
-    //     src: ['*.css'],
-    //     dest: 'Assets/stylesheets/',
-    //   }
-    // },
     postcss: {
       options: {
         map: false, // inline sourcemaps
@@ -104,31 +93,28 @@ module.exports = function(grunt) {
         }
       }
     },
-    tinyimg: {
+    imagemin: {
       dynamic: {
         files: [{
           expand: true,
           cwd: 'Assets/images/',
-          src: ['**/*.{png,jpg,svg}'],
+          src: ['**/*.{png,jpg,gif,svg}'],
           dest: 'Assets/images/'
         }]
       }
-    }
+    },
   });
 
   // 3. Where we tell Grunt we plan to use this plug-in.
   grunt.loadNpmTasks("grunt-sass"); // testing
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-compass'); // Compass and SASS compiling
-  grunt.loadNpmTasks('grunt-contrib-cssmin'); // Css minify
   grunt.loadNpmTasks('grunt-contrib-watch'); // Watches files for changes, run 'grunt watch' will pick up sass changes and compile css
   grunt.loadNpmTasks('grunt-browser-sync'); //Create server
   grunt.loadNpmTasks('grunt-postcss');
-  //grunt.loadNpmTasks('grunt-autoprefixer'); // Use specified vendor prefixes for compiled CSS
-  //grunt.loadNpmTasks('grunt-newer'); // Add newer: infront of a task to only account for recently edited files
+  grunt.loadNpmTasks('grunt-contrib-imagemin');
 
   // 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
   grunt.registerTask('serve', ['browserSync', 'watch']);
-  grunt.registerTask('prod', ['sass:prod', 'postcss', 'concat', 'uglify:build']);
+  grunt.registerTask('prod', ['sass:prod', 'postcss', 'concat', 'uglify:build', 'imagemin']);
 };
