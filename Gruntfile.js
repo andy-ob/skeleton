@@ -8,10 +8,23 @@ module.exports = function(grunt) {
         dist: {
             options: {
                 outputStyle: 'expanded', //Nested, expanded, compact, compressed
-                sassDir: 'sass',
-                cssDir: 'stylesheets',
+                //sassDir: 'Assets/sass',
+                //cssDir: 'Assets/stylesheets',
             },
+            files: {
+              "Assets/stylesheets/styles.css": "Assets/sass/styles.scss"
+            }
         }
+    },
+    sass: {
+      dist: {
+        options: {
+          outputStyle: "expanded"
+        },
+        files: {
+          "Assets/stylesheets/styles.css": "Assets/sass/styles.scss"
+        }
+      }
     },
     autoprefixer: {
       options: {
@@ -19,21 +32,21 @@ module.exports = function(grunt) {
       },
       dist: {
         expand: true,
-        cwd: 'stylesheets/',
+        cwd: 'Assets/stylesheets/',
         src: ['*.css'],
-        dest: 'stylesheets/',
+        dest: 'Assets/stylesheets/',
       }
     },
     concat: {
       js: {
-        src: [ 'js/*js', '!js/html5shiv.js' ],
-        dest: 'js/min/production.js', //Concatanate JS
+        src: [ 'Assets/js/*js', 'Assets/!js/html5shiv.js' ],
+        dest: 'Assets/js/min/production.js', //Concatanate JS
       },
     },
     uglify: {
       build: {
-        src: 'js/min/production.js',
-        dest: 'js/min/production.js' //Minify JS
+        src: 'Assets/js/min/production.js',
+        dest: 'Assets/js/min/production.js' //Minify JS
       }
     },
     cssmin: {
@@ -43,21 +56,25 @@ module.exports = function(grunt) {
       },
       target: {
         files: {
-          'stylesheets/min/compiled.min.css' : ['stylesheets/styles.css']
+          'Assets/stylesheets/min/compiled.min.css' : ['Assets/stylesheets/styles.css']
         }
       }
     },
     watch: {
+      options: {
+        spawn: false,
+      },
       scripts: {
-        files: ['js/*.js'], //Watch JS for changes
-        tasks: ['concat', 'uglify'], //Concatanate and minify on change
+        files: ['Assets/js/*.js'], //Watch JS for changes
+        //tasks: ['concat', 'uglify'], //Concatanate and minify on change
         options: {
           spawn: false,
         },
       },
       css: {
-        files: ['sass/*.scss'], //Watch scss and css for changes
-        tasks: ['compass', 'newer:autoprefixer:dist', 'cssmin'], //Build CSS and minify
+        files: ['Assets/sass/*.scss'], //Watch scss and css for changes
+        //tasks: ['compass', 'newer:autoprefixer:dist', 'cssmin'], //Build CSS and minify
+        tasks: ['sass', 'newer:autoprefixer:dist', 'cssmin'], //Build CSS and minify
         options: {
           spawn: false,
         }
@@ -66,15 +83,16 @@ module.exports = function(grunt) {
     browserSync: {
       dev: {
         bsFiles: {
-          src: ['stylesheets/*.css', 'stylesheets/min/*.css', 'js/*.js', 'js/min/*.js', '*.html']
+          src: ['Assets/stylesheets/*.css', 'Assets/stylesheets/min/*.css', 'Assets/js/*.js', 'Assets/js/min/*.js', 'Originals/*.html']
         },
         options: {
           watchTask: true,
-          server: '.',
+          //server: '.',
+          proxy: 'http://www.travelclinic.local',
           ghostMode: {
-            scroll: true,
-            links: true,
-            forms: true
+            scroll: false,
+            links: false,
+            forms: false
           }
         }
       }
@@ -83,15 +101,16 @@ module.exports = function(grunt) {
       dynamic: {
         files: [{
           expand: true,
-          cwd: 'images/',
+          cwd: 'Assets/images/',
           src: ['**/*.{png,jpg,svg}'],
-          dest: 'images/'
+          dest: 'Assets/images/'
         }]
       }
     }
   });
 
   // 3. Where we tell Grunt we plan to use this plug-in.
+  grunt.loadNpmTasks("grunt-sass"); // testing
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-compass'); // Compass and SASS compiling
